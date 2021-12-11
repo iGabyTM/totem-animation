@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
+}
+
+group 'me.gabytm.minecraft'
+version '1.0.0'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+
+    maven {
+        name 'Spigot'
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+
+    maven {
+        name 'ProtocolLib'
+        url 'https://repo.dmulloy2.net/repository/public/'
+    }
+
+    maven {
+        name 'Gui'
+        url 'https://repo.mattstudios.me/artifactory/public/'
+    }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT'
+
+    implementation 'me.mattstudios.utils:matt-framework:1.4' // https://mf.mattstudios.me/mf/mf-1
+    implementation 'dev.triumphteam:triumph-gui:3.0.3' // https://mf.mattstudios.me/triumph-gui/introduction
+
+    implementation 'net.kyori:adventure-api:4.8.1'
+
+    compileOnly 'com.comphenix.protocol:ProtocolLib:4.6.0'
+
+    implementation 'org.jetbrains:annotations:21.0.1'
+}
+
+compileJava.options.encoding = "UTF-8"
+
+processResources {
+    eachFile { expand version: version }
+}
+
+shadowJar {
+    archiveName("TotemAnimation [${project.version}].jar")
+
+    [
+            'me.mattstudios.mf'  : 'commands',
+            'dev.triumphteam.gui': 'gui'
+    ].each { relocate(it.key, String.format('%s.totemanimation.libs.%s', project.group, it.value)) }
+}
+
+task copyJarToServer(type: Copy) {
+    from shadowJar
+    into "./server/plugins"
+}

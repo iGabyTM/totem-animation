@@ -1,0 +1,15 @@
+name: TotemAnimation
+main: me.gabytm.minecraft.totemanimation.TotemAnimationPlugin
+version: ${version}
+
+api-version: 1.13
+
+depend:
+  - ProtocolLib
+
+author: GabyTM
+website: https://gabytm.me/
+
+permissions:
+  totemanimation:
+    admin:
